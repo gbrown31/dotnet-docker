@@ -34,13 +34,11 @@ public sealed class UnitTest1 : IAsyncLifetime, IDisposable
             .WithVolumeMount("postgres-data", "/var/lib/postgresql/data")
             .Build();
 
-        //var tempContainer = new ContainerBuilder()
-        //    .WithCommand("cd ../", "docker build --tag dotnet-docker .")
-        //    .Build();
 
         _appContainer = new ContainerBuilder()
-            .WithCommand("cd ../", "docker build --tag dotnet-docker .")
-            .WithImage("dotnet-docker")
+            //.WithCommand("cd ../", "docker build --tag dotnet-docker .")
+            //.WithImage("dotnet-docker")
+            .WithImage("localbuilt")
             .WithNetwork(_network)
             .WithPortBinding(HttpPort, true)
             .WithWaitStrategy(Wait.ForUnixContainer().UntilHttpRequestIsSucceeded(request => request.ForPath("/")))
@@ -54,8 +52,20 @@ public sealed class UnitTest1 : IAsyncLifetime, IDisposable
 
         Task dbTask = Task.Run(() => _dbContainer.StartAsync(_cts.Token).ConfigureAwait(false));
 
+
+
+        var imageFromContainer = new ImageFromDockerfileBuilder()
+            .WithDockerfile("Dockerfile")
+            .WithDockerfileDirectory("../../../../")
+            .WithName("localbuilt")
+            .Build();
+
+        await imageFromContainer.CreateAsync();
+
+
         await _appContainer.StartAsync(_cts.Token)
             .ConfigureAwait(false);
+
     }
 
     public Task DisposeAsync()
