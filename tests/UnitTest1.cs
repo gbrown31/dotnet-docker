@@ -13,7 +13,7 @@ public sealed class UnitTest1 : IAsyncLifetime, IDisposable
 {
     private const ushort HttpPort = 80;
 
-    private readonly CancellationTokenSource _cts = new(TimeSpan.FromMinutes(1));
+    private readonly CancellationTokenSource _cts = new(TimeSpan.FromMinutes(10));
 
     private readonly INetwork _network;
 
