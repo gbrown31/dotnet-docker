@@ -41,7 +41,7 @@ public sealed class UnitTest1 : IAsyncLifetime, IDisposable
             .WithImage("localbuilt")
             .WithNetwork(_network)
             .WithPortBinding(HttpPort, true)
-            .WithWaitStrategy(Wait.ForUnixContainer().UntilHttpRequestIsSucceeded(request => request.ForPath("/")))
+            .WithWaitStrategy(Wait.ForUnixContainer().UntilContainerIsHealthy())
             .Build();
     }
 
