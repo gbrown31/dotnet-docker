@@ -34,7 +34,12 @@ public sealed class UnitTest1 : IAsyncLifetime, IDisposable
             .WithVolumeMount("postgres-data", "/var/lib/postgresql/data")
             .Build();
 
+        //var tempContainer = new ContainerBuilder()
+        //    .WithCommand("cd ../", "docker build --tag dotnet-docker .")
+        //    .Build();
+
         _appContainer = new ContainerBuilder()
+            .WithCommand("cd ../", "docker build --tag dotnet-docker .")
             .WithImage("dotnet-docker")
             .WithNetwork(_network)
             .WithPortBinding(HttpPort, true)
@@ -44,7 +49,6 @@ public sealed class UnitTest1 : IAsyncLifetime, IDisposable
 
     public async Task InitializeAsync()
     {
-
         await _network.CreateAsync(_cts.Token)
             .ConfigureAwait(false);
 
